@@ -13,18 +13,6 @@ public class Toaster : MonoBehaviour
     public float x;
     public float y;
 
-    void Start()
-    {
-        StartCoroutine(Order());
-    }
-
-    IEnumerator Order()
-    {
-        transform.Rotate(90, 0, 0);
-        yield return new WaitForSeconds(3.0f);
-        transform.Translate(1, 0, 0);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -34,8 +22,10 @@ public class Toaster : MonoBehaviour
             //rb.gameObject.GetComponent<playerMovement>().currPos = rb.position;
             rb.AddForce(new Vector2(x * pushForce, y * pushForce), ForceMode2D.Impulse);
         }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
 
-        
     }
 
 }
