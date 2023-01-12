@@ -1,3 +1,3 @@
 # RAT
 
-![image](https://user-images.githubusercontent.com/78766367/212201951-d350cd9e-f52a-4830-a19c-0ddeac0fa9e9.png)
+![main_menu](https://user-images.githubusercontent.com/78766367/212201981-632e9bac-8837-42bb-b70e-5315a26b2dd0.png)
