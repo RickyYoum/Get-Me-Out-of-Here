@@ -31,7 +31,7 @@ public class agroCat : MonoBehaviour
     bool facingRight;
 
     private bool initDirection;
-    
+
     static int layerMask;
 
     private float initRange;
@@ -67,14 +67,14 @@ public class agroCat : MonoBehaviour
         if (canSeeRat(agroRange))
         {
             ChaseRat();
-            
+
         }
         else
         {
             ReturnCat();
-           
+
         }
-    
+
     }
 
     bool canSeeRat(float agroRange)
@@ -82,14 +82,14 @@ public class agroCat : MonoBehaviour
         bool val = false;
         var lineDist = agroRange;
 
-       
+
 
 
         Vector2 endPos = cat.position + Direction * lineDist;
         RaycastHit2D agroInfo = Physics2D.Linecast(AgroRange.transform.position, endPos, layerMask);
         Debug.DrawLine(AgroRange.position, endPos, Color.blue);
 
-        if(agroInfo)
+        if (agroInfo)
         {
 
             if (agroInfo.collider.gameObject.CompareTag("Player"))
@@ -115,29 +115,29 @@ public class agroCat : MonoBehaviour
             rb2d.velocity = new Vector2(-fastMoveSpeed, 0);
             cat.transform.localScale = new Vector2(-1, 1);
         }
-                
-                
 
-            
+
+
+
     }
 
     void ReturnCat()
     {
 
-            if(Mathf.Round(cat.transform.position.x) != Mathf.Round(initPosition.x))
+        if (Mathf.Round(cat.transform.position.x) != Mathf.Round(initPosition.x))
         {
             agroRange = 0f;
             cat.transform.position += (initPosition - cat.transform.position) * slowMoveSpeed * Time.deltaTime;
             Debug.Log(cat.transform.position.x);
             Debug.Log(initPosition.x);
-      
+
         }
-            if (Mathf.Round(cat.transform.position.x) == Mathf.Round(initPosition.x))
-            {
+        if (Mathf.Round(cat.transform.position.x) == Mathf.Round(initPosition.x))
+        {
             agroRange = initRange;
-            
+
         }
-        
+
 
 
 

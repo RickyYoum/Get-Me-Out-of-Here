@@ -3,8 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class Downstairs : MonoBehaviour
 {
-    public void LoadDownLevell()
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (collision.tag == "Player")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }   
     }
+        
+    
 }

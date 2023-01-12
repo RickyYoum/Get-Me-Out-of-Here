@@ -1,32 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Hide : MonoBehaviour
 {
     public GameObject player;
+
     // Update is called once per frame
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (Input.GetKey(KeyCode.K))
+        if (collision.tag == "Player")
         {
-            Debug.Log("Hide");
-            player.layer = 6;
-            player.transform.GetChild(1).GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            //player.GetComponent<SpriteRenderer>().enabled = false;
+            if (Input.GetKey(KeyCode.J))
+            {
+                hide();
+            }
+            else
+            {
+                reveal();
+            }
         }
-        else
-        {
-            Debug.Log("Reveal");
-            player.layer = 7;
-            player.transform.GetChild(1).GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        }
-        
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("Reveal");
+        if (collision.tag == "Player")
+        {
+            reveal();
+        }
+        
+    }
+
+    private void hide()
+    {
+        player.layer = 6;
+        player.GetComponent<SpriteRenderer>().enabled = false;
+        player.GetComponent<BoxCollider2D>().isTrigger = true;
+        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+    }
+
+    private void reveal()
+    {
         player.layer = 7;
-        player.transform.GetChild(1).GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        player.GetComponent<SpriteRenderer>().enabled = true;
+        player.GetComponent<BoxCollider2D>().isTrigger = false;
+        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }

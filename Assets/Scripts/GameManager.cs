@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     public void goIn()
     {
-        
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         //transition.SetTrigger("transition");
     }

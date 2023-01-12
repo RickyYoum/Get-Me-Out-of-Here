@@ -3,95 +3,113 @@ using UnityEngine.SceneManagement;
 
 public class playerMovement : MonoBehaviour
 {
-
-    private float jumpTimeCounter;
-    private bool jumping;
     private bool isRight = true;
-    private float direction;
+    private float horDirection;
+    private Rigidbody2D rb;
+    private bool jumping;
 
-    [HideInInspector]
-    public bool onGround;
-    [HideInInspector]
-    public bool canMove = true;
-    public Rigidbody2D rb;
+    public float jumpTime;
+    private float jumpTimeCounter;
     public float jumpPower;
     public float speed;
-    //public Transform playerGround;
-    public float checkRadius;
-    //public LayerMask groundLayer;
-    public float jumpTime;
-    //public Animator moving;
-    //public bool hasParachute = false;
     public float maxSpeed;
-    
-    //public Vector2 currPos;
     public SpriteRenderer sprite;
     public Sprite oldSprite;
     public Sprite newSprite;
-    public BoxCollider2D box;
+    public BoxCollider2D box1;
+    public BoxCollider2D box2;
     public float ratio;
+    private bool onGround;
+    public float gravity;
+    [HideInInspector]
+    public bool canMove;
+    public Vector2 currPos;
+    //public Animator rat;
+    public AudioSource jumpSource;
+    public AudioSource walkSource;
+    public AudioSource windSource;
+
+    public AudioClip jumpSound;
+    public AudioClip walkSound;
+    public AudioClip windSound;
 
     void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
         oldSprite = sprite.sprite;
     }
     void FixedUpdate()
     {
-        //Debug.Log(onGround);
-        direction = Input.GetAxisRaw("Horizontal");
         if (canMove)
         {
-            rb.velocity = new Vector2(direction * speed, rb.velocity.y);
+            rb.velocity = new Vector2(horDirection * speed * 100 * Time.deltaTime, rb.velocity.y);
         }
         else
         {
-            //if rb.position.magnitude > currPos.magnitude + 1
-            canMove = true;
-            
+            /* Limit the toaster movement
+            if (rb.position.magnitude > currPos.magnitude + 1)
+            {
+                canMove = true;
+            }
+            */
         }
 
     }
+
     private void Update()
     {
+        // Menu Button
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene("Menu");
         }
-        if (rb.velocity.y == 0)
+
+        // Ground check
+        if (onGround)
         {
-            onGround = true;
+            canMove = true;
         }
-        //onGround = Physics2D.OverlapCircle(playerGround.position, checkRadius, groundLayer);
+
+        // Directions
+        horDirection = Input.GetAxisRaw("Horizontal");
+
+        
         if (canMove)
         {
-            
-            if (rb.velocity.magnitude > maxSpeed)
+            // Speed Limit
+            if (onGround && rb.velocity.magnitude > maxSpeed)
             {
-                rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
+                rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxSpeed);
             }
-            if (direction > 0 && !isRight )
+
+            // Flip the sprite of the player when direction changes horizontally
+            if (horDirection > 0 && !isRight)
             {
                 Flip();
             }
-            else if (direction < 0 && isRight)
+            else if (horDirection < 0 && isRight)
             {
                 Flip();
             }
-            if (rb.velocity.y >= -10 && onGround && Input.GetKeyDown(KeyCode.J))
+
+            // Coyote Jump
+            if (rb.velocity.y >= -10 && onGround && Input.GetKeyDown(KeyCode.W))
             {
-                onGround = false;
                 jumpTimeCounter = jumpTime;
+                jumpSource.clip = jumpSound;
+                jumpSource.Play();
                 rb.velocity = Vector2.up * jumpPower;
-                //moving.SetTrigger("Jump");
+                jumping = true;
             }
-            /*
-            if (Input.GetKeyUp(KeyCode.Space))
+
+            // Jump done once player lets go 
+            if (Input.GetKeyUp(KeyCode.W))
             {
                 jumping = false;
             }
 
-            
-            if (Input.GetKey(KeyCode.Space) && jumping)
+            // Long Jump
+            if (jumping && Input.GetKey(KeyCode.W) && !onGround && rb.velocity.y > 0)
             {
                 if (jumpTimeCounter > 0)
                 {
@@ -103,35 +121,65 @@ public class playerMovement : MonoBehaviour
                     jumping = false;
                 }
             }
-            */
-            if (rb.velocity.y < 0 && Input.GetKey(KeyCode.K))
+
+            // Parachute
+            if (rb.velocity.y < 0 && Input.GetKey(KeyCode.J))
             {
                 sprite.sprite = newSprite;
-                //moving.SetTrigger("Parachute Wiggle");
-                rb.gravityScale = 0.5f;
+                //rat.SetTrigger("Parachute Wiggle");
+                rb.gravityScale = .5f;
+                windSource.clip = windSound;
+                if (!windSource.isPlaying) {
+                    
+                    windSource.Play();
+                }
+
             }
             else
             {
-                //moving.SetFloat("Stop", 0f);
-                //moving.SetFloat("Stop", 1f);
-
+                //rat.SetFloat("Stop", 0f);
+                //rat.SetFloat("Stop", 1f);
                 sprite.sprite = oldSprite;
-                rb.gravityScale = 5f;
+                rb.gravityScale = gravity;
             }
         }
-
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.tag == "Object" || collision.gameObject.tag == "Platform" || collision.gameObject.tag == "Wall")
+        {
+            onGround = true;
+            if (horDirection != 0 && !walkSource.isPlaying)
+            {
+                windSource.clip = walkSound;
+                windSource.Play();
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Object" || collision.gameObject.tag == "Platform" || collision.gameObject.tag == "Wall")
+        {
+            onGround = false;
+        }
+    }
+
     private void Flip()
     {
         isRight = !isRight;
         sprite.flipX = !sprite.flipX;
         if (isRight)
         {
-            box.offset = new Vector2(box.offset.x + ratio, box.offset.y);
+            box1.offset = new Vector2(box1.offset.x + ratio, box1.offset.y);
+            box2.offset = new Vector2(box2.offset.x + ratio, box2.offset.y);
         }
         else
         {
-            box.offset = new Vector2(box.offset.x - ratio, box.offset.y);
+            box1.offset = new Vector2(box1.offset.x - ratio, box1.offset.y);
+            box2.offset = new Vector2(box2.offset.x - ratio, box2.offset.y);
         }
 
     }
