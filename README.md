@@ -2,6 +2,8 @@
 
 Welcome to the "Get Me Out of Here!", a 2D Unity game that plunges players into the daring escapades of a clever rat navigating challenging stages while evading an array of obstacles. This thrilling adventure involves using stealth mechanics to outmaneuver adversaries, all within a fast-paced and immersive environment.
 
+![image](https://user-images.githubusercontent.com/78766367/212202396-fb1113fe-60ab-4618-b5d3-88736dda15bb.png)
+
 ## Key Features
 
 - **Stealth Gameplay**: Engage in strategic gameplay, employing the rat's hiding abilities to surpass obstacles.
@@ -20,5 +22,3 @@ Immerse yourself in a fast-paced and strategy-driven adventure where the rat's a
 ## Acknowledgment
 
 This project is a testament to the team's creativity, efficiency, and skill in developing an engaging and challenging game within a constrained timeframe.
-
-![image](https://user-images.githubusercontent.com/78766367/212202396-fb1113fe-60ab-4618-b5d3-88736dda15bb.png)
